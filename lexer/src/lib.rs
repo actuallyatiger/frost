@@ -216,6 +216,14 @@ mod lexer {
     }
 
     #[test]
+    fn test_empty_input() {
+        let input = "";
+        let mut lexer = Lexer::new(input.to_string());
+
+        expect_token(&mut lexer, TokenKind::Eof);
+    }
+
+    #[test]
     fn parse_val() {
         use tokens::TokenKind::*;
 
