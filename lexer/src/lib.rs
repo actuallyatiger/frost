@@ -189,7 +189,7 @@ impl Lexer {
 
 #[cfg(test)]
 mod lexer {
-    use crate::tokens::TokenKind;
+    use tokens::TokenKind;
 
     use super::*;
 
@@ -204,14 +204,16 @@ mod lexer {
 
     #[test]
     fn parse_val() {
+        use tokens::TokenKind::*;
+
         let input = "val x = 5";
         let mut lexer = Lexer::new(input.to_string());
 
-        expect_token(&mut lexer, TokenKind::Val);
-        expect_token(&mut lexer, TokenKind::Identifier("x".to_string()));
-        expect_token(&mut lexer, TokenKind::Assign);
-        expect_token(&mut lexer, TokenKind::IntLiteral(5));
-        expect_token(&mut lexer, TokenKind::Eof);
+        expect_token(&mut lexer, Val);
+        expect_token(&mut lexer, Identifier("x".to_string()));
+        expect_token(&mut lexer, Assign);
+        expect_token(&mut lexer, IntLiteral(5));
+        expect_token(&mut lexer, Eof);
 
         // Check that the lexer has reached the end of the input
         assert_eq!(lexer.position, input.len());
@@ -219,18 +221,20 @@ mod lexer {
 
     #[test]
     fn parse_multiline() {
+        use tokens::TokenKind::*;
+
         let input = "val x = 5\nval y = 10";
         let mut lexer = Lexer::new(input.to_string());
 
-        expect_token(&mut lexer, TokenKind::Val);
-        expect_token(&mut lexer, TokenKind::Identifier("x".to_string()));
-        expect_token(&mut lexer, TokenKind::Assign);
-        expect_token(&mut lexer, TokenKind::IntLiteral(5));
-        expect_token(&mut lexer, TokenKind::Val);
-        expect_token(&mut lexer, TokenKind::Identifier("y".to_string()));
-        expect_token(&mut lexer, TokenKind::Assign);
-        expect_token(&mut lexer, TokenKind::IntLiteral(10));
-        expect_token(&mut lexer, TokenKind::Eof);
+        expect_token(&mut lexer, Val);
+        expect_token(&mut lexer, Identifier("x".to_string()));
+        expect_token(&mut lexer, Assign);
+        expect_token(&mut lexer, IntLiteral(5));
+        expect_token(&mut lexer, Val);
+        expect_token(&mut lexer, Identifier("y".to_string()));
+        expect_token(&mut lexer, Assign);
+        expect_token(&mut lexer, IntLiteral(10));
+        expect_token(&mut lexer, Eof);
 
         // Check that the lexer has reached the end of the input
         assert_eq!(lexer.position, input.len());
@@ -238,179 +242,199 @@ mod lexer {
 
     #[test]
     fn parse_arithmetic_operators() {
+        use tokens::TokenKind::*;
+
         let input = "1 + 2 - 3 * 4 / 5 % 6";
         let mut lexer = Lexer::new(input.to_string());
 
-        expect_token(&mut lexer, TokenKind::IntLiteral(1));
-        expect_token(&mut lexer, TokenKind::Plus);
-        expect_token(&mut lexer, TokenKind::IntLiteral(2));
-        expect_token(&mut lexer, TokenKind::Minus);
-        expect_token(&mut lexer, TokenKind::IntLiteral(3));
-        expect_token(&mut lexer, TokenKind::Multiply);
-        expect_token(&mut lexer, TokenKind::IntLiteral(4));
-        expect_token(&mut lexer, TokenKind::Divide);
-        expect_token(&mut lexer, TokenKind::IntLiteral(5));
-        expect_token(&mut lexer, TokenKind::Modulus);
-        expect_token(&mut lexer, TokenKind::IntLiteral(6));
-        expect_token(&mut lexer, TokenKind::Eof);
+        expect_token(&mut lexer, IntLiteral(1));
+        expect_token(&mut lexer, Plus);
+        expect_token(&mut lexer, IntLiteral(2));
+        expect_token(&mut lexer, Minus);
+        expect_token(&mut lexer, IntLiteral(3));
+        expect_token(&mut lexer, Multiply);
+        expect_token(&mut lexer, IntLiteral(4));
+        expect_token(&mut lexer, Divide);
+        expect_token(&mut lexer, IntLiteral(5));
+        expect_token(&mut lexer, Modulus);
+        expect_token(&mut lexer, IntLiteral(6));
+        expect_token(&mut lexer, Eof);
     }
 
     #[test]
     fn parse_comparison_operators() {
+        use tokens::TokenKind::*;
+
         let input = "a < b > c <= d >= e == f != g";
         let mut lexer = Lexer::new(input.to_string());
 
-        expect_token(&mut lexer, TokenKind::Identifier("a".to_string()));
-        expect_token(&mut lexer, TokenKind::LessThan);
-        expect_token(&mut lexer, TokenKind::Identifier("b".to_string()));
-        expect_token(&mut lexer, TokenKind::GreaterThan);
-        expect_token(&mut lexer, TokenKind::Identifier("c".to_string()));
-        expect_token(&mut lexer, TokenKind::LessThanOrEqual);
-        expect_token(&mut lexer, TokenKind::Identifier("d".to_string()));
-        expect_token(&mut lexer, TokenKind::GreaterThanOrEqual);
-        expect_token(&mut lexer, TokenKind::Identifier("e".to_string()));
-        expect_token(&mut lexer, TokenKind::Equals);
-        expect_token(&mut lexer, TokenKind::Identifier("f".to_string()));
-        expect_token(&mut lexer, TokenKind::NotEquals);
-        expect_token(&mut lexer, TokenKind::Identifier("g".to_string()));
-        expect_token(&mut lexer, TokenKind::Eof);
+        expect_token(&mut lexer, Identifier("a".to_string()));
+        expect_token(&mut lexer, LessThan);
+        expect_token(&mut lexer, Identifier("b".to_string()));
+        expect_token(&mut lexer, GreaterThan);
+        expect_token(&mut lexer, Identifier("c".to_string()));
+        expect_token(&mut lexer, LessThanOrEqual);
+        expect_token(&mut lexer, Identifier("d".to_string()));
+        expect_token(&mut lexer, GreaterThanOrEqual);
+        expect_token(&mut lexer, Identifier("e".to_string()));
+        expect_token(&mut lexer, Equals);
+        expect_token(&mut lexer, Identifier("f".to_string()));
+        expect_token(&mut lexer, NotEquals);
+        expect_token(&mut lexer, Identifier("g".to_string()));
+        expect_token(&mut lexer, Eof);
     }
 
     #[test]
     fn parse_logical_operators() {
+        use tokens::TokenKind::*;
+
         let input = "a && b || !c";
         let mut lexer = Lexer::new(input.to_string());
 
-        expect_token(&mut lexer, TokenKind::Identifier("a".to_string()));
-        expect_token(&mut lexer, TokenKind::And);
-        expect_token(&mut lexer, TokenKind::Identifier("b".to_string()));
-        expect_token(&mut lexer, TokenKind::Or);
-        expect_token(&mut lexer, TokenKind::Not);
-        expect_token(&mut lexer, TokenKind::Identifier("c".to_string()));
-        expect_token(&mut lexer, TokenKind::Eof);
+        expect_token(&mut lexer, Identifier("a".to_string()));
+        expect_token(&mut lexer, And);
+        expect_token(&mut lexer, Identifier("b".to_string()));
+        expect_token(&mut lexer, Or);
+        expect_token(&mut lexer, Not);
+        expect_token(&mut lexer, Identifier("c".to_string()));
+        expect_token(&mut lexer, Eof);
     }
 
     #[test]
     fn parse_brackets_and_delimiters() {
+        use tokens::TokenKind::*;
+
         let input = "( ) [ ] { } , :";
         let mut lexer = Lexer::new(input.to_string());
 
-        expect_token(&mut lexer, TokenKind::LParen);
-        expect_token(&mut lexer, TokenKind::RParen);
-        expect_token(&mut lexer, TokenKind::LBracket);
-        expect_token(&mut lexer, TokenKind::RBracket);
-        expect_token(&mut lexer, TokenKind::LBrace);
-        expect_token(&mut lexer, TokenKind::RBrace);
-        expect_token(&mut lexer, TokenKind::Comma);
-        expect_token(&mut lexer, TokenKind::Colon);
-        expect_token(&mut lexer, TokenKind::Eof);
+        expect_token(&mut lexer, LParen);
+        expect_token(&mut lexer, RParen);
+        expect_token(&mut lexer, LBracket);
+        expect_token(&mut lexer, RBracket);
+        expect_token(&mut lexer, LBrace);
+        expect_token(&mut lexer, RBrace);
+        expect_token(&mut lexer, Comma);
+        expect_token(&mut lexer, Colon);
+        expect_token(&mut lexer, Eof);
     }
 
     #[test]
     fn parse_keywords() {
+        use tokens::TokenKind::*;
+
         let input = "val var fn";
         let mut lexer = Lexer::new(input.to_string());
 
-        expect_token(&mut lexer, TokenKind::Val);
-        expect_token(&mut lexer, TokenKind::Var);
-        expect_token(&mut lexer, TokenKind::Fn);
-        expect_token(&mut lexer, TokenKind::Eof);
+        expect_token(&mut lexer, Val);
+        expect_token(&mut lexer, Var);
+        expect_token(&mut lexer, Fn);
+        expect_token(&mut lexer, Eof);
     }
 
     #[test]
     fn parse_identifiers() {
+        use tokens::TokenKind::*;
+
         let input = "abc x123 camelCase snake_case aB_1c_";
         let mut lexer = Lexer::new(input.to_string());
 
-        expect_token(&mut lexer, TokenKind::Identifier("abc".to_string()));
-        expect_token(&mut lexer, TokenKind::Identifier("x123".to_string()));
-        expect_token(&mut lexer, TokenKind::Identifier("camelCase".to_string()));
-        expect_token(&mut lexer, TokenKind::Identifier("snake_case".to_string()));
-        expect_token(&mut lexer, TokenKind::Identifier("aB_1c_".to_string()));
-        expect_token(&mut lexer, TokenKind::Eof);
+        expect_token(&mut lexer, Identifier("abc".to_string()));
+        expect_token(&mut lexer, Identifier("x123".to_string()));
+        expect_token(&mut lexer, Identifier("camelCase".to_string()));
+        expect_token(&mut lexer, Identifier("snake_case".to_string()));
+        expect_token(&mut lexer, Identifier("aB_1c_".to_string()));
+        expect_token(&mut lexer, Eof);
     }
 
     #[test]
     fn parse_function_declaration() {
+        use tokens::TokenKind::*;
+
         let input = "fn add(a: int, b: int): int { a + b }";
         let mut lexer = Lexer::new(input.to_string());
 
-        expect_token(&mut lexer, TokenKind::Fn);
-        expect_token(&mut lexer, TokenKind::Identifier("add".to_string()));
-        expect_token(&mut lexer, TokenKind::LParen);
-        expect_token(&mut lexer, TokenKind::Identifier("a".to_string()));
-        expect_token(&mut lexer, TokenKind::Colon);
-        expect_token(&mut lexer, TokenKind::Identifier("int".to_string()));
-        expect_token(&mut lexer, TokenKind::Comma);
-        expect_token(&mut lexer, TokenKind::Identifier("b".to_string()));
-        expect_token(&mut lexer, TokenKind::Colon);
-        expect_token(&mut lexer, TokenKind::Identifier("int".to_string()));
-        expect_token(&mut lexer, TokenKind::RParen);
-        expect_token(&mut lexer, TokenKind::Colon);
-        expect_token(&mut lexer, TokenKind::Identifier("int".to_string()));
-        expect_token(&mut lexer, TokenKind::LBrace);
-        expect_token(&mut lexer, TokenKind::Identifier("a".to_string()));
-        expect_token(&mut lexer, TokenKind::Plus);
-        expect_token(&mut lexer, TokenKind::Identifier("b".to_string()));
-        expect_token(&mut lexer, TokenKind::RBrace);
-        expect_token(&mut lexer, TokenKind::Eof);
+        expect_token(&mut lexer, Fn);
+        expect_token(&mut lexer, Identifier("add".to_string()));
+        expect_token(&mut lexer, LParen);
+        expect_token(&mut lexer, Identifier("a".to_string()));
+        expect_token(&mut lexer, Colon);
+        expect_token(&mut lexer, Identifier("int".to_string()));
+        expect_token(&mut lexer, Comma);
+        expect_token(&mut lexer, Identifier("b".to_string()));
+        expect_token(&mut lexer, Colon);
+        expect_token(&mut lexer, Identifier("int".to_string()));
+        expect_token(&mut lexer, RParen);
+        expect_token(&mut lexer, Colon);
+        expect_token(&mut lexer, Identifier("int".to_string()));
+        expect_token(&mut lexer, LBrace);
+        expect_token(&mut lexer, Identifier("a".to_string()));
+        expect_token(&mut lexer, Plus);
+        expect_token(&mut lexer, Identifier("b".to_string()));
+        expect_token(&mut lexer, RBrace);
+        expect_token(&mut lexer, Eof);
     }
 
     #[test]
     fn parse_complex_expression() {
+        use tokens::TokenKind::*;
+
         let input = "val result = (a + b) * (c - d) / (e % f)";
         let mut lexer = Lexer::new(input.to_string());
 
-        expect_token(&mut lexer, TokenKind::Val);
-        expect_token(&mut lexer, TokenKind::Identifier("result".to_string()));
-        expect_token(&mut lexer, TokenKind::Assign);
-        expect_token(&mut lexer, TokenKind::LParen);
-        expect_token(&mut lexer, TokenKind::Identifier("a".to_string()));
-        expect_token(&mut lexer, TokenKind::Plus);
-        expect_token(&mut lexer, TokenKind::Identifier("b".to_string()));
-        expect_token(&mut lexer, TokenKind::RParen);
-        expect_token(&mut lexer, TokenKind::Multiply);
-        expect_token(&mut lexer, TokenKind::LParen);
-        expect_token(&mut lexer, TokenKind::Identifier("c".to_string()));
-        expect_token(&mut lexer, TokenKind::Minus);
-        expect_token(&mut lexer, TokenKind::Identifier("d".to_string()));
-        expect_token(&mut lexer, TokenKind::RParen);
-        expect_token(&mut lexer, TokenKind::Divide);
-        expect_token(&mut lexer, TokenKind::LParen);
-        expect_token(&mut lexer, TokenKind::Identifier("e".to_string()));
-        expect_token(&mut lexer, TokenKind::Modulus);
-        expect_token(&mut lexer, TokenKind::Identifier("f".to_string()));
-        expect_token(&mut lexer, TokenKind::RParen);
-        expect_token(&mut lexer, TokenKind::Eof);
+        expect_token(&mut lexer, Val);
+        expect_token(&mut lexer, Identifier("result".to_string()));
+        expect_token(&mut lexer, Assign);
+        expect_token(&mut lexer, LParen);
+        expect_token(&mut lexer, Identifier("a".to_string()));
+        expect_token(&mut lexer, Plus);
+        expect_token(&mut lexer, Identifier("b".to_string()));
+        expect_token(&mut lexer, RParen);
+        expect_token(&mut lexer, Multiply);
+        expect_token(&mut lexer, LParen);
+        expect_token(&mut lexer, Identifier("c".to_string()));
+        expect_token(&mut lexer, Minus);
+        expect_token(&mut lexer, Identifier("d".to_string()));
+        expect_token(&mut lexer, RParen);
+        expect_token(&mut lexer, Divide);
+        expect_token(&mut lexer, LParen);
+        expect_token(&mut lexer, Identifier("e".to_string()));
+        expect_token(&mut lexer, Modulus);
+        expect_token(&mut lexer, Identifier("f".to_string()));
+        expect_token(&mut lexer, RParen);
+        expect_token(&mut lexer, Eof);
     }
 
     #[test]
     fn parse_comments() {
+        use tokens::TokenKind::*;
+
         let input = "val x = 5 // This is a comment\nval y = 10";
         let mut lexer = Lexer::new(input.to_string());
 
-        expect_token(&mut lexer, TokenKind::Val);
-        expect_token(&mut lexer, TokenKind::Identifier("x".to_string()));
-        expect_token(&mut lexer, TokenKind::Assign);
-        expect_token(&mut lexer, TokenKind::IntLiteral(5));
+        expect_token(&mut lexer, Val);
+        expect_token(&mut lexer, Identifier("x".to_string()));
+        expect_token(&mut lexer, Assign);
+        expect_token(&mut lexer, IntLiteral(5));
         // Comment should be skipped
-        expect_token(&mut lexer, TokenKind::Val);
-        expect_token(&mut lexer, TokenKind::Identifier("y".to_string()));
-        expect_token(&mut lexer, TokenKind::Assign);
-        expect_token(&mut lexer, TokenKind::IntLiteral(10));
-        expect_token(&mut lexer, TokenKind::Eof);
+        expect_token(&mut lexer, Val);
+        expect_token(&mut lexer, Identifier("y".to_string()));
+        expect_token(&mut lexer, Assign);
+        expect_token(&mut lexer, IntLiteral(10));
+        expect_token(&mut lexer, Eof);
     }
 
     #[test]
     fn parse_whitespace() {
+        use tokens::TokenKind::*;
+
         let input = "  val  x  =  5  ";
         let mut lexer = Lexer::new(input.to_string());
 
-        expect_token(&mut lexer, TokenKind::Val);
-        expect_token(&mut lexer, TokenKind::Identifier("x".to_string()));
-        expect_token(&mut lexer, TokenKind::Assign);
-        expect_token(&mut lexer, TokenKind::IntLiteral(5));
-        expect_token(&mut lexer, TokenKind::Eof);
+        expect_token(&mut lexer, Val);
+        expect_token(&mut lexer, Identifier("x".to_string()));
+        expect_token(&mut lexer, Assign);
+        expect_token(&mut lexer, IntLiteral(5));
+        expect_token(&mut lexer, Eof);
 
         // Even with extra whitespace, the lexer should correctly reach the end
         assert_eq!(lexer.position, input.len());
