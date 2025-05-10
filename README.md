@@ -31,3 +31,5 @@ fn add_with_const(x: int, y: int): int {
     }
 }
 ```
+
+[![CI status badge showing passing or failing state for the main branch on GitHub Actions](https://github.com/actuallyatiger/frost/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/actuallyatiger/frost/actions/workflows/ci.yml)
