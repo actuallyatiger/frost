@@ -17,6 +17,11 @@ impl Span {
     pub fn len(&self) -> usize {
         self.end - self.start
     }
+
+    /// Check if the span is empty.
+    pub fn is_empty(&self) -> bool {
+        self.start == self.end
+    }
 }
 
 impl Display for Span {

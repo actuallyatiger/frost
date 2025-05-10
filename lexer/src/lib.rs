@@ -70,7 +70,7 @@ impl Lexer {
     fn read_integer(&mut self) -> isize {
         let start = self.position;
         while let Some(char) = self.peek(0) {
-            if char.is_digit(10) {
+            if char.is_ascii_digit() {
                 self.advance(1);
             } else {
                 break;
