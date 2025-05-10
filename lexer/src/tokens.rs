@@ -8,6 +8,11 @@ pub enum TokenKind {
     Var, // var
     Fn,  // fn
 
+    // Control flow
+    If,   // if
+    Elif, // elif
+    Else, // else
+
     // Syntax
     LParen,   // (
     RParen,   // )
@@ -65,6 +70,9 @@ impl Display for TokenKind {
             TokenKind::Val => "val",
             TokenKind::Var => "var",
             TokenKind::Fn => "fn",
+            TokenKind::If => "if",
+            TokenKind::Elif => "elif",
+            TokenKind::Else => "else",
             TokenKind::LParen => "(",
             TokenKind::RParen => ")",
             TokenKind::LBracket => "[",

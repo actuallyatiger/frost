@@ -1,11 +1,21 @@
 #![allow(dead_code)]
 
-use std::char;
+use phf::phf_map;
 
 use tokens::Token;
 
 pub mod span;
 pub mod tokens;
+
+/// Static map for keywords
+static KEYWORDS: phf::Map<&'static str, tokens::TokenKind> = phf_map! {
+    "val" => tokens::TokenKind::Val,
+    "var" => tokens::TokenKind::Var,
+    "fn" => tokens::TokenKind::Fn,
+    "if" => tokens::TokenKind::If,
+    "elif" => tokens::TokenKind::Elif,
+    "else" => tokens::TokenKind::Else,
+};
 
 struct Lexer {
     pub input: String,
@@ -67,6 +77,7 @@ impl Lexer {
         self.input[start..self.position].to_string()
     }
 
+    /// Reads an integer from the input.
     fn read_integer(&mut self) -> isize {
         let start = self.position;
         while let Some(char) = self.peek(0) {
@@ -79,6 +90,7 @@ impl Lexer {
         self.input[start..self.position].parse().unwrap()
     }
 
+    /// Reads from the input and produces a token.
     pub fn next_token(&mut self) -> Token {
         use tokens::TokenKind::*;
 
@@ -164,11 +176,12 @@ impl Lexer {
             'a'..='z' | 'A'..='Z' => {
                 let start = self.position;
                 let kw = self.read_keyword();
-                match kw.as_str() {
-                    "val" => Token::new(Val, start, 3),
-                    "var" => Token::new(Var, start, 3),
-                    "fn" => Token::new(Fn, start, 2),
-                    _ => Token::new(Identifier(kw.clone()), start, kw.len()),
+
+                // Look up the keyword in the map, return identifier if not found
+                if let Some(kind) = KEYWORDS.get(kw.as_str()) {
+                    Token::new(kind.clone(), start, kw.len())
+                } else {
+                    Token::new(Identifier(kw.clone()), start, kw.len())
                 }
             }
             '0'..='9' => {
