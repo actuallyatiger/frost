@@ -20,9 +20,7 @@ jobs:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
         with:
-          profile: minimal
           toolchain: stable
-          override: true
           components: rustfmt, clippy
       - name: Cache Cargo dependencies
         uses: actions/cache@v4
@@ -63,9 +61,7 @@ jobs:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
         with:
-          profile: minimal
           toolchain: ${{ matrix.toolchain }}
-          override: true
       - name: Cache Cargo dependencies
         uses: actions/cache@v4
         with:
@@ -102,9 +98,7 @@ jobs:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
         with:
-          profile: minimal
           toolchain: ${{ matrix.toolchain }}
-          override: true
       - name: Cache Cargo dependencies
         uses: actions/cache@v4
         with:
